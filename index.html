@@ -1,0 +1,239 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Smart Crop Recommendation</title>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <div id="status-indicator" class="status-indicator status-offline">Connecting...</div>
+  
+  <header id="page-title">Smart Crop Recommendation</header>
+
+  <div class="container">
+
+    <!-- LOGIN -->
+    <div id="login-section">
+      <h2 id="login-header">Farmer Login</h2>
+      <input type="text" id="login-username" placeholder="Username" />
+      <input type="password" id="login-password" placeholder="Password" />
+      <button id="login-btn" onclick="login()">Login</button>
+      <p id="new-here-text">New here? <a href="#" onclick="showRegister()" style="color: #81c784;">Register</a></p>
+      <p id="login-error" class="error"></p>
+    </div>
+
+    <!-- REGISTER -->
+    <div id="register-section" class="hidden">
+      <h2 id="register-header">Register</h2>
+      <input type="text" id="reg-username" placeholder="Username" />
+      <input type="password" id="reg-password" placeholder="Password" />
+      <select id="reg-lang">
+        <option value="en">English</option>
+        <option value="hi">हिन्दी</option>
+        <option value="ta">தமிழ்</option>
+        <option value="te">తెలుగు</option>
+        <option value="kn">ಕನ್ನಡ</option>
+        <option value="ml">മലയാളം</option>
+        <option value="bn">বাংলা</option>
+        <option value="gu">ગુજરાતી</option>
+        <option value="mr">मराठी</option>
+        <option value="pa">ਪੰਜਾਬੀ</option>
+        <option value="ur">اردو</option>
+      </select>
+      <button id="register-btn" onclick="register()">Register</button>
+      <p id="already-text">Already have an account? <a href="#" onclick="showLogin()" style="color: #81c784;">Login</a></p>
+      <p id="reg-error" class="error"></p>
+    </div>
+
+    <!-- MAIN APPLICATION WITH TABS -->
+    <div id="crop-section" class="hidden">
+      <!-- Tab Navigation -->
+      <div class="tabs-container">
+        <div class="tabs">
+          <button class="tab active" id="recommendation-tab" onclick="switchTab('recommendation')">
+            Crop Recommendation
+          </button>
+          <button class="tab" id="yield-tab" onclick="switchTab('yield')">
+            Yield Prediction
+          </button>
+          <button class="tab" id="userinfo-tab" onclick="switchTab('userinfo')">
+            User Info
+          </button>
+        </div>
+      </div>
+
+      <!-- CROP RECOMMENDATION TAB -->
+      <div id="recommendation-content" class="tab-content active">
+        <div class="section-title" id="recommendation-subtitle">Get personalized crop recommendations based on your conditions</div>
+        
+        <form id="recommendationForm">
+          <div class="form-group">
+            <label id="label-seed">Seed/Crop:</label>
+            <select id="seed"></select>
+          </div>
+          
+          <div class="form-group">
+            <label id="label-soil">Soil Type:</label>
+            <select id="soil"></select>
+          </div>
+          
+          <div class="form-group">
+            <label id="label-season">Season:</label>
+            <select id="season"></select>
+          </div>
+          
+          <div class="form-group">
+            <label id="label-location">Location/State:</label>
+            <select id="location"></select>
+          </div>
+
+          <button type="button" id="recommend-btn" onclick="getInfo()">Get Recommendation</button>
+        </form>
+
+        <div class="result" id="recommendation-result"></div>
+      </div>
+
+      <!-- YIELD PREDICTION TAB -->
+      <div id="yield-content" class="tab-content">
+        <div class="section-title" id="yield-subtitle">Predict crop yield based on environmental conditions</div>
+        
+        <form id="yieldForm">
+          <div class="form-group">
+            <label id="label-yield-seed">Select Crop:</label>
+            <select id="yield-seed"></select>
+          </div>
+          
+          <div class="form-group">
+            <label id="label-soil-temp">Soil Temperature (°C):</label>
+            <input type="number" id="soil_temp" step="0.1" placeholder="Enter soil temperature (e.g., 25.5)" min="0" max="50" />
+          </div>
+          
+          <div class="form-group">
+            <label id="label-ph">Soil pH:</label>
+            <input type="number" id="ph" step="0.1" placeholder="Enter soil pH (e.g., 6.5)" min="0" max="14" />
+          </div>
+          
+          <div class="form-group">
+            <label id="label-rainfall">Rainfall (mm):</label>
+            <input type="number" id="rainfall" step="0.1" placeholder="Enter rainfall (e.g., 1200)" min="0" />
+          </div>
+
+          <button type="button" id="yield-btn" onclick="predictYield()">Predict Yield</button>
+        </form>
+
+        <div class="result" id="yield-result"></div>
+      </div>
+
+      <!-- USER INFO TAB -->
+      <div id="userinfo-content" class="tab-content">
+        <!-- Profile Section -->
+        <div class="info-section" id="profile-section">
+          <h3 id="profile-title">Profile</h3>
+          <div id="profile-content">
+            <!-- Profile data will be loaded here -->
+          </div>
+        </div>
+
+        <!-- About Us Section -->
+        <div class="info-section" id="about-section">
+          <h3 id="about-title">About Us</h3>
+          <p id="about-description">Smart Crop Recommendation System helps farmers make informed decisions about crop selection based on soil conditions, climate, and local factors. Our advanced algorithms analyze multiple parameters to provide personalized recommendations.</p>
+        </div>
+
+        <!-- Contact Us Section -->
+        <div class="info-section" id="contact-section">
+          <h3 id="contact-title">Contact Us</h3>
+          <div class="contact-info" id="contact-email">Email:belltorarietes@gmail.com</div>
+          <div class="contact-info" id="contact-phone">Phone: +91-7483290488</div>
+          <div class="contact-info" id="contact-address">Address: MIT Agricultural Technology Center,Mysore, Karnataka, India</div>
+        </div>
+
+        <!-- Help Section -->
+        <div class="info-section" id="help-section">
+          <h3 id="help-title">Help</h3>
+          
+          <h4 id="help-how-to-use">How to Use</h4>
+          <div class="help-item" id="help-step1">1. Login with your credentials or register as a new user</div>
+          <div class="help-item" id="help-step2">2. Select your preferred language from the dropdown</div>
+          <div class="help-item" id="help-step3">3. Use Crop Recommendation tab to get suggestions based on your conditions</div>
+          <div class="help-item" id="help-step4">4. Use Yield Prediction tab to estimate expected crop yield</div>
+          
+          <h4 id="help-faq">Frequently Asked Questions</h4>
+          <div class="faq-item">
+            <div class="faq-question" id="help-faq1">Q: How accurate are the recommendations?</div>
+            <div id="help-faq1-ans">A: Our system uses comprehensive agricultural databases and considers multiple factors for high accuracy.</div>
+          </div>
+          <div class="faq-item">
+            <div class="faq-question" id="help-faq2">Q: Can I use this system offline?</div>
+            <div id="help-faq2-ans">A: Currently, the system requires internet connection for translation and database access.</div>
+          </div>
+        </div>
+
+        <!-- Feedback Section -->
+        <div class="info-section" id="feedback-section">
+          <h3 id="feedback-title">Feedback</h3>
+          <div class="feedback-form">
+            <div class="form-group">
+              <label id="feedback-rating-label">Rate your experience (1-5 stars):</label>
+              <div class="rating-container">
+                <div class="star-rating">
+                  <span class="star" data-rating="1">⭐</span>
+                  <span class="star" data-rating="2">⭐</span>
+                  <span class="star" data-rating="3">⭐</span>
+                  <span class="star" data-rating="4">⭐</span>
+                  <span class="star" data-rating="5">⭐</span>
+                </div>
+                <span id="rating-display">No rating selected</span>
+              </div>
+            </div>
+            
+            <div class="form-group">
+              <label id="feedback-comments-label">Your feedback and suggestions:</label>
+              <textarea id="feedback-text" class="feedback-textarea" placeholder="Share your experience and suggestions..."></textarea>
+            </div>
+            
+            <button type="button" id="submit-feedback-btn" onclick="submitFeedback()">Submit Feedback</button>
+          </div>
+          
+          <div id="feedback-result" class="result"></div>
+        </div>
+      </div>
+
+      <!-- Common Controls -->
+      <div style="margin-top: 30px; border-top: 1px solid rgba(255,255,255,0.2); padding-top: 20px;">
+        <button type="button" id="logout-btn" onclick="logout()" class="danger" style="margin-bottom: 20px;">Logout</button>
+        
+        <!-- Language Switch Dropdown -->
+        <div style="text-align:center;">
+          <label for="lang-switch" id="lang-label">Change Language:</label>
+          <select id="lang-switch" onchange="switchLanguage(this.value)" style="width: auto; margin-left: 10px;">
+            <option value="en">English</option>
+            <option value="hi">हिन्दी</option>
+            <option value="ta">தமிழ்</option>
+            <option value="te">తెలుగు</option>
+            <option value="kn">ಕನ್ನಡ</option>
+            <option value="ml">മലയാളം</option>
+            <option value="bn">বাংলা</option>
+            <option value="gu">ગુજરાતી</option>
+            <option value="mr">मराठी</option>
+            <option value="pa">ਪੰਜਾਬੀ</option>
+            <option value="ur">اردو</option>
+          </select>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <div class="footer" id="footer">PROJECT BY <b>TEAM BELLATOR ARIETES</b></div>
+
+  <!-- JavaScript Files - Load in correct order -->
+  <script src="app.js"></script>
+  <script src="auth.js"></script>
+  <script src="translation.js"></script>
+  <script src="crop-recommendation.js"></script>
+  <script src="yield-prediction.js"></script>
+  <script src="user-info.js"></script>
+</body>
+</html>
